@@ -11,13 +11,19 @@ output/100doh_clips/
 ```
 
 
+
+
 2. Given GT bbox, get object and hand segmentation for the first frame of all the videos with `hoi_det.py`
 The JPEGImages and Annotation will be saved in the form ready for STCN to process (only forward pass). 
+```
+python hoi_det.py 
+python cvt_to_stcn.py
+```
 
-
+`100doh_detectron`
 ? multiple object segmentation??? 
 ```
-obj/
+100doh_detectron/by_obj/
     JPEGImages/
         video1_o1/
             00000.png....
@@ -40,7 +46,12 @@ ppl/
 
 3. Run STCN
 construct backward folder from forward pass
-python run_doh.py
+```
+bash run_stcn.sh
+```
 
-
-4. preview 
+4. evaluate and preview 
+```
+conda activate lasr
+python eval_vis()
+```
