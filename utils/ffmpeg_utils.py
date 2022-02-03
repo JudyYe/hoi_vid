@@ -5,24 +5,28 @@ import os.path as osp
 import imageio
 import datetime
 
-def write_mp4(video, save_file, fps=10):
+def write_mp4(video, save_file, fps=10, clear=True):
     tmp_dir = save_file + '.tmp'
     os.makedirs(tmp_dir, exist_ok=True)
     for t, image in enumerate(video):
         if isinstance(image, str):
-            os.system('cp %s %s' % (image, osp.join(tmp_dir, '%03d.jpg' % t)))
+            # os.system('cp %s %s' % (image, osp.join(tmp_dir, '%03d.jpg' % t)))
+            os.system('cp %s %s' % (image, osp.join(tmp_dir, '%03d.%s' % (t, image.split('.')[-1]))))
+            ext = '%s' % image.split('.')[-1]
         else:
             imageio.imwrite(osp.join(tmp_dir, '%03d.jpg' % t), image.astype(np.uint8))
+            ext = 'jpg'
 
     if osp.exists(save_file + '.mp4'):
         os.system('rm %s.mp4' % (save_file))
-    src_list_dir = osp.join(tmp_dir, '%03d.jpg')
+    src_list_dir = osp.join(tmp_dir, '%03d.' + ext )
     cmd = '/home/yufeiy2/.local/bin/ffmpeg -framerate %d -i %s -c:v libx264 -pix_fmt yuv420p %s.mp4' % (fps, src_list_dir, save_file)
     cmd += ' -hide_banner -loglevel error'
     print(cmd)
     os.system(cmd)
-    cmd = 'rm -r %s' % tmp_dir
-    os.system(cmd)
+    if clear:
+        cmd = 'rm -r %s' % tmp_dir
+        os.system(cmd)
 
 
 def frame_num_to_time(frame_index, fps):

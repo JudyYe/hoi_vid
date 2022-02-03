@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-from ffmpeg_utils import write_mp4, extract_frame
+from utils.ffmpeg_utils import write_mp4, extract_frame
 
 H = W = 256
 fps = 30

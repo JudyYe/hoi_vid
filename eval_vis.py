@@ -9,7 +9,7 @@ import glob
 import os
 import os.path as osp
 import scipy.io as sio
-import ffmpeg_utils
+import utils.ffmpeg_utils as ffmpeg_utils
 
 data_dir = '../output/100doh_detectron'
 odir = '../output/100doh_detectron/by_obj'

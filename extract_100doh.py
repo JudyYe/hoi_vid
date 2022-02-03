@@ -6,7 +6,7 @@ import os.path as osp
 from pytube import YouTube
 from tqdm import tqdm
 import glob
-from ffmpeg_utils import arithmeticEval, cvt_frame_num, write_mp4, extract_frame
+from utils.ffmpeg_utils import arithmeticEval, cvt_frame_num, write_mp4, extract_frame
 
 data_dir = '../data/100doh/'
 vid_dir = '../data/100doh/Videos'
