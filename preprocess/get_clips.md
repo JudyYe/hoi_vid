@@ -1,3 +1,6 @@
+The script download some videos from 100DOH and extract short clips around its key frames (step1). Then given the bounding box of hand and object in the key frame from GT annotation, it tracks both hand and object, get their masks, reconstruct hand, and find correspondence between multiple hand and objects.
+
+
 1. use extract_100doh.py:download_videos() extract_key_frames to download and get some clips
 ```python extract_100doh.py```
 the clip will be saved to 
@@ -13,7 +16,7 @@ output/100doh_clips/
 
 
 
-2. Given GT bbox, get object and hand segmentation for the first frame of all the videos with `hoi_det.py`
+2. Given GT bbox in the first frame , get object and hand segmentation for the first frame of all the videos with `hoi_det.py`
 The JPEGImages and Annotation will be saved in the form ready for STCN to process (only forward pass). 
 
 list all clips and feed them through vos.sh one by one
