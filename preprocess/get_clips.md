@@ -25,7 +25,7 @@ python batch_vos.py
 - put to STCN format
 - track by STCN
 - evaluate and visualize
-
+- find coresponding hand and reconstruct hand by frank mocap
 
 
 --- 

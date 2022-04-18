@@ -52,14 +52,15 @@ def to_frankmocap(seqname):
         json_file = osp.join(fdir, 'hand_box', seqname, '%05d.json' % f)
         os.makedirs(osp.dirname(json_file), exist_ok=True)
         with open(json_file, 'w') as fp:
+            print('hand bbox save to ', json_file)
             json.dump(json_obj, fp, indent=4)
 
 
 if __name__ == '__main__':
     seqname = argv[1] if len(argv) >= 2 else '*'
-    vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
-    vid_list = [osp.basename(e) for e in vid_list]
+    # vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
+    # vid_list = [osp.basename(e) for e in vid_list]
     
-    for seqname in vid_list:
-        to_frankmocap(seqname)
+    # for seqname in vid_list:
+    to_frankmocap(seqname)
     

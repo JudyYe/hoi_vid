@@ -103,6 +103,7 @@ def find_corsp_hand(seqname):
         save_file = osp.join(odir, 'VidAnnotations', '%s_%d/hand_inds_side.pkl' % (seqname, o))
         hand_inds = np.where(adj[o] > 0)[0]
         with open(save_file, 'wb') as fp:
+            print('save to ', save_file)
             pickle.dump({
                 'handside':hand_side, 
                 'hand_inds':hand_inds, 
@@ -168,8 +169,8 @@ def vis_hand(seqname):
 
 if __name__ == '__main__':
     seqname = argv[1] if len(argv) >= 2 else '*'
-    vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
-    vid_list = [osp.basename(e) for e in vid_list]
-    for seqname in vid_list:
-        find_corsp_hand(seqname)
+    # vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
+    # vid_list = [osp.basename(e) for e in vid_list]
+    # for seqname in vid_list:
+    find_corsp_hand(seqname)
         # vis_hand(seqname)

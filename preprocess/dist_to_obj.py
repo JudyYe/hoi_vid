@@ -6,12 +6,8 @@ Input:
     per-frame mocap results
 """
 
-import json
-import os
 import os.path as osp
-import pickle
 from sys import argv
-import numpy as np
 from glob import glob
 import shutil
 
@@ -27,16 +23,16 @@ def dist_to_obj(seqname):
         src_dir = osp.join(fdir, 'mocap', seqname, )
         shutil.copytree(src_dir, dst_dir, dirs_exist_ok=True)
 
-        dst_dir = osp.join(lasr_dir, 'r%s_%d' % (seqname, o))
-        shutil.rmtree(dst_dir, True)
-        src_dir = osp.join(fdir, 'mocap', seqname, )
-        shutil.copytree(src_dir, dst_dir, dirs_exist_ok=True)
+        # dst_dir = osp.join(lasr_dir, 'r%s_%d' % (seqname, o))
+        # shutil.rmtree(dst_dir, True)
+        # src_dir = osp.join(fdir, 'mocap', seqname, )
+        # shutil.copytree(src_dir, dst_dir, dirs_exist_ok=True)
 
 
 if __name__ == '__main__':
     seqname = argv[1] if len(argv) >= 2 else '*'
-    vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
-    vid_list = [osp.basename(e) for e in vid_list]
+    # vid_list = glob.glob(osp.join(odir, 'JPEGImages', seqname))
+    # vid_list = [osp.basename(e) for e in vid_list]
     
-    for seqname in vid_list:
-        dist_to_obj(seqname)
+    # for seqname in vid_list:
+    dist_to_obj(seqname)
