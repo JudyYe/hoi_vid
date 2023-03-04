@@ -108,7 +108,7 @@ def sort_by_obj_class_num(all_clips):
         video = clip['frame']['video']
         clip['num_cats'] = len(num_cats_in_video[video])
     all_clips = sorted(all_clips, key=lambda x: x['num_cats'], reverse=True)
-
+    
     return all_clips
 
 
