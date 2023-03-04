@@ -4,7 +4,8 @@ import os
 import os.path as osp
 import argparse
 
-data_dir = '/home/yufeiy2/scratch/data/VISOR/'
+data_dir = '/home/yufeiy/data' # '../data/VISOR'
+# data_dir = '/home/yufeiy2/scratch/data/VISOR/'
 epic100_url = 'https://data.bris.ac.uk/datasets/2g1n6qdydwa9u22shpxqzp0t8m/P01/rgb_frames/P01_101.tar'
 # epic18_url = 'https://data.bris.ac.uk/datasets/3h91syskeag572hl6tvuovwv4d/frames_rgb_flow/rgb/test/P01/P01_11.tar'
 
@@ -121,22 +122,33 @@ def x_clips_each(num=5):
 
     mini_clip_list = []
     for clip in all_clips:
-        obj_cat = clip['hand']['class_id']
+        obj_cat = clip['obj']['class_id']
         if len(cat_count[obj_cat]) >= num:
             continue
         video_count[clip['frame']['video']] = 0
         cat_count[obj_cat].append(clip)
 
+    print(len(video_count), 'vids to download')
+    print(video_count)
+    # change key from int to cat name by id2cat
+    cat_count = {id2cat[k]: v for k, v in cat_count.items()}
     with open(osp.join(data_dir, f'Sets/hoi_clips_minix{num}.json'), 'w') as f:
         json.dump(cat_count, f, indent=4)
 
-
-
+    # save video_count key by lines 
+    with open(osp.join(data_dir, f'Sets/vids_minix{num}.txt'), 'w') as f:
+        for k in video_count:
+            f.write(k + '\n')
+    
+# def pretty_save
 def parse_args():
     parser = argparse.ArgumentParser(description='Extract 100DOH')
     parser.add_argument('--dl_anno', action='store_true', default=False)
     parser.add_argument('--debug', action='store_true', default=False)
     parser.add_argument('--filter_anno', action='store_true', default=False)
+    parser.add_argument('--xclip', action='store_true', default=False)
+    parser.add_argument('--num', default=5, type=int)
+
     args = parser.parse_args()
     return args
 
@@ -146,8 +158,11 @@ if __name__ == '__main__':
     if args.dl_anno:
         dl_anno_list()
     if args.debug:
-        anno_file = '/compute/grogu-2-9/yufeiy2/data/VISOR/GroundTruth-SparseAnnotations/annotations/val/P18_02.json'
+        # anno_file = '/compute/grogu-2-9/yufeiy2/data/VISOR/GroundTruth-SparseAnnotations/annotations/val/P18_02.json'
         # get_clips(anno_file)
         make_index_list()
+        # pretty_save()
     if args.filter_anno:
         filter_annos()
+    if args.xclip:
+        x_clips_each(args.num)
