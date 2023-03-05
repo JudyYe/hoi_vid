@@ -7,6 +7,8 @@ the clip will be saved to
 ```
 output/100doh_clips/
     diy_xcvdtw_frame234325/
+        # user provided bbox.json: 
+        [{'type': 'right_hand', 'bbox': [xyxy]} ,{'type': 'obj', 'bbox': [xyxy]}}
         clip.mp4
         key_frame.jpg
         frames/

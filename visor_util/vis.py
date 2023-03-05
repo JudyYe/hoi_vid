@@ -41,6 +41,7 @@ def generate_masks_for_image(image_name, image_path, masks_info, output_director
                 #print(ps)
                 #print(entity['name'])
                 #print(object_keys[entity['name']])
+                # import pdb; pdb.set_trace()
                 cv2.fillPoly(img, ps, (object_keys[entity['name']], object_keys[entity['name']], object_keys[entity['name']]))
                 #cv2.polylines(img, ps, True, (255,255,255), thickness=1)
         else:
@@ -62,7 +63,8 @@ def generate_masks_for_image(image_name, image_path, masks_info, output_director
         else:
             out_image = image_data
             
-        imwrite_indexed_2(os.path.join(output_directory,image_name), out_image)
+        # imwrite_indexed_2(os.path.join(output_directory,image_name), out_image)
+        imwrite_sem(os.path.join(output_directory,image_name), out_image)
         
         if is_overlay:
             image1 = image_name.replace("png", "jpg")
@@ -88,47 +90,57 @@ def generate_masks_for_image(image_name, image_path, masks_info, output_director
 
 
 
-def folder_of_jsons_to_masks(json_files_path,output_directory,is_overlay=False, rgb_frames= '.', output_resolution=(1920,1080),generate_video=True):
+def folder_of_jsons_to_masks(json_files_path,output_directory,is_overlay=False, rgb_frames= '.', output_resolution=(1920,1080),generate_video=True ,query='*', dry=False):
 
-    
-    if os.path.exists(os.path.join(output_directory,'data_mapping.csv')):
-        os.remove(os.path.join(output_directory,'data_mapping.csv'))
-        
-    for json_file in tqdm(sorted(glob.glob(os.path.join(json_files_path ,'*.json')))):
+    # if os.path.exists(os.path.join(output_directory,'data_mapping.csv')):
+    #     os.remove(os.path.join(output_directory,'data_mapping.csv'))
+    for json_file in tqdm(sorted(glob.glob(os.path.join(json_files_path ,f'{query}.json')))):
+        seq_name = '_'.join(os.path.basename(json_file).split('_')[:2])
+        map_file = os.path.join(output_directory, seq_name, 'data_mapping.csv')
+        print(map_file)    
+        if os.path.exists(map_file):
+            os.remove(map_file)
         if 'interpolation' in os.path.basename(json_file):
             input_resolution =(854,480)
             frame_rate = 50
         else:
             input_resolution =(1920,1080)
             frame_rate = 3
-        objects_keys = json_to_masks_new(json_file,output_directory,is_overlay=is_overlay, images_root_directory=rgb_frames,input_resolution=input_resolution, output_resolution=output_resolution)
-        if generate_video:
+        # import pdb; pdb.set_trace()
+        objects_keys = json_to_masks_new(json_file,output_directory,is_overlay=is_overlay, images_root_directory=rgb_frames,input_resolution=input_resolution, output_resolution=output_resolution, dry=dry)
+        if generate_video and not dry:
             generate_video_from_images(os.path.join(output_directory,'_'.join(os.path.basename(json_file).split('.')[0].split('_')[:2])), frame_rate)
+        # if generate_mask and not dry:
+        #     generate_masks_from_images(os.path.join(output_directory,'_'.join(os.path.basename(json_file).split('.')[0].split('_')[:2])), frame_rate)            
         data = pd.DataFrame(objects_keys.items(), columns=['object_name', 'unique_index'])
         data['video_id'] = json_file.split('/')[-1].split('.')[0]
         
-        data = data[['video_id', 'object_name','unique_index']]
-        if not os.path.isfile(os.path.join(output_directory,'data_mapping.csv')):
-            data.to_csv(os.path.join(output_directory,'data_mapping.csv'), index=False,header=['video_id','object_name', 'unique_index'])
+        if not os.path.isfile(map_file):
+            data.to_csv(map_file, index=False,header=['video_id','object_name', 'unique_index'])
         else:
-            data.to_csv(os.path.join(output_directory,'data_mapping.csv'),mode='a', header=False,index=False)
+            data.to_csv(map_file,mode='a', header=False,index=False)
+        # if not os.path.isfile(os.path.join(output_directory,'data_mapping.csv')):
+        #     data.to_csv(os.path.join(output_directory,'data_mapping.csv'), index=False,header=['video_id','object_name', 'unique_index'])
+        # else:
+        #     data.to_csv(os.path.join(output_directory,'data_mapping.csv'),mode='a', header=False,index=False)
         
 
 
 
-def json_to_masks_new(filename,output_directory,is_overlay=False, images_root_directory= '.',input_resolution=(1920,1080), output_resolution=(1920,1080)):
+def json_to_masks_new(filename,output_directory,is_overlay=False, images_root_directory= '.',input_resolution=(1920,1080), output_resolution=(1920,1080), dry=False):
     os.makedirs(output_directory, exist_ok=True)
 
     object_keys = {}
     objects = do_stats_stage2_jsons_single_file_new(filename)
-    #print('objects: ',objects)
+    print('objects: ',objects)
     i = 1
     for key,_ in objects:
         object_keys[key] = i
         i=i+1
     max_count = max(object_keys.values())
     #print(f'unique object count of {filename.split("/")[-1]} is {max_count}')
-    
+    if dry:
+        return object_keys
     f = open(filename)
     # returns JSON object as a dictionary
     data = json.load(f)
@@ -204,6 +216,7 @@ def do_stats_stage2_jsons_single_file_new(file):
 def generate_video_from_images (input_directory,frame_rate):
 
     out_file = input_directory
+    print(out_file)
     x = "ffmpeg -y -pattern_type glob -r " + str(frame_rate)+ " -i '" +input_directory + "/*.png' -vcodec mpeg4 -qmin 1 -qscale:v 1 " + out_file + ".mp4"
     os.system(x)
 
@@ -272,3 +285,10 @@ def imwrite_indexed_2(filename, im,non_empty_objects=None):
     im = Image.fromarray(im.detach().cpu().squeeze().numpy(), 'P')
     im.putpalette(color_palette.ravel())
     im.save(filename)
+
+def imwrite_sem(filename, im,non_empty_objects=None):
+    im = torch.from_numpy(im)
+    im.detach().cpu().squeeze().numpy()
+    np.savez_compressed(filename, im)
+    # im = Image.fromarray(im.detach().cpu().squeeze().numpy(), 'P')
+    # im.save(filename)

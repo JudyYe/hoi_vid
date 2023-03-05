@@ -15,8 +15,8 @@ import secrets
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Interpolation correction script')
-    parser.add_argument('--input_dir', type=str, default='VISOR/Interpolations-DenseAnnotations/train', help='path to the interpolation JSONs')
-    parser.add_argument('--output_dir', type=str, default='VISOR/Interpolations-DenseAnnotations/train', help='path to save the corrected interpolation JSONs')
+    parser.add_argument('--input_dir', type=str, default='/home/yufeiy/data/Interpolations-DenseAnnotations/test', help='path to the interpolation JSONs')
+    parser.add_argument('--output_dir', type=str, default='/home/yufeiy/data/Interpolations-DenseAnnotations/test', help='path to save the corrected interpolation JSONs')
     return parser.parse_args()
 
 def correct_interpolations(in_folder, out_folder, specific_json_list=[]):

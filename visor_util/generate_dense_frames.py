@@ -32,7 +32,7 @@ def generate_images_n_V2(video_path,dest_folder,start_frame_id,number_of_frames,
 def copy_jpg_image(image_name,in_path,out_path,output_resolution=(854, 480)):
 
     image_name = image_name.replace('png','jpg')
-    
+    print(os.path.join(in_path,image_name), image_name)
     img = cv2.imread(os.path.join(in_path,image_name))
     #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     resized = cv2.resize(img, output_resolution, interpolation=cv2.INTER_LINEAR)
@@ -75,21 +75,20 @@ def generate_dense_images_from_video_jsons(json_files_path, output_directory, sp
                if ((seq_name != "")  and (not os.path.exists(os.path.join(output_directory,seq_name)))): # if it is not the before starting (seq = "" as inital value)
                     #print(len(os.walk("/".join(infile.split("/")[:-2])).__next__()[1]))
                     #os.makedirs(os.path.join(output_dir,seq_name+"_"+str(seq_start_frame)+"_"+str(seq_end_frame)), exist_ok=True) this for start and end frame
-                    
-                    ##print("Seq: ",seq_name)
-                    ##print("Start: ",seq_start_frame_str)
-                    ##print("Start: ",seq_start_frame)
-                    ##print("END: ",seq_end_frame)
-                    ##print("-----------------------")
+                    sub = seq_name.split("_")[0]
+                    print("Seq: ",seq_name)
+                    print("Start: ",seq_start_frame_str)
+                    print("Start: ",seq_start_frame)
+                    print("END: ",seq_end_frame)
+                    print("-----------------------")
                     current_v =  datapoint["image"]["video"]
+                    print("V: ",current_v, sparse_rgb_images_root)
                     os.makedirs(os.path.join(output_directory,current_v), exist_ok=True)
-                    #import pdb
-                    #pdb.set_trace() 
                     generate_images_n_V2(video_path.replace(v,current_v), os.path.join(output_directory,current_v), seq_start_frame_str,
                                          seq_end_frame - seq_start_frame + 1,output_resolution)
                     rename_images(os.path.join(output_directory, current_v), seq_start_frame_str,seq_start_frame,seq_end_frame - seq_start_frame + 1)
-                    copy_jpg_image(os.path.join(current_v,seq_start_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
-                    copy_jpg_image(os.path.join(current_v,seq_end_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
+                    copy_jpg_image(os.path.join(sub, current_v,seq_start_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
+                    copy_jpg_image(os.path.join(sub, current_v,seq_end_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
                     #pdb.set_trace()
                     #generate_images_n_V2_index1(video_path, os.path.join(output_dir,seq_name), seq_start_frame_str,1)
                     #rename_images(os.path.join(output_dir, seq_name), seq_start_frame_str,seq_start_frame,1)
@@ -116,21 +115,22 @@ def generate_dense_images_from_video_jsons(json_files_path, output_directory, sp
             ##print("Start: ", seq_start_frame)
             ##print("END: ", seq_end_frame)
             ##print("-----------------------")
+            sub = seq_start_frame_str.split("_")[0]
             os.makedirs(os.path.join(output_directory,current_v), exist_ok=True)
             generate_images_n_V2(video_path, os.path.join(output_directory,current_v), seq_start_frame_str,
                                  seq_end_frame - seq_start_frame + 1,output_resolution)
             rename_images(os.path.join(output_directory, current_v), seq_start_frame_str,seq_start_frame,seq_end_frame - seq_start_frame + 1)
     
-            copy_jpg_image(os.path.join(current_v,seq_start_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
-            copy_jpg_image(os.path.join(current_v,seq_end_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
+            copy_jpg_image(os.path.join(sub, current_v,seq_start_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
+            copy_jpg_image(os.path.join(sub, current_v,seq_end_frame_str),sparse_rgb_images_root,os.path.join(output_directory),output_resolution)
     
 
 if __name__ == '__main__':
 
-    json_files_path = '../jsons'
-    output_directory = '../out'
-    sparse_rgb_images_root = '../Images'
-    videos_path = '../videos' 
+    json_files_path = '/home/yufeiy/data/Interpolations-DenseAnnotations/train' # '../jsons'
+    output_directory = '/home/yufeiy/data/VISOR/out/'
+    sparse_rgb_images_root = '/home/yufeiy/data/GroundTruth-SparseAnnotations/rgb_frames/train' # '../Images'
+    videos_path = '/home/yufeiy/data/VISOR/EPIC-KITCHENS/' 
     output_resolution = (854,480) #original interpolation resolution
     generate_dense_images_from_video_jsons(json_files_path,output_directory,sparse_rgb_images_root,videos_path,output_resolution)
                
