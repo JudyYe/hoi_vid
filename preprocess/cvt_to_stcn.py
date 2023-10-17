@@ -8,10 +8,12 @@ import os
 import os.path as osp
 import scipy.io as sio
 
-
-data_dir = '../output/100doh_detectron'
-odir = '../output/100doh_detectron/by_obj'
-pdir = data_dir + '/by_ppl'
+data_dir = os.environ['DATA_DIR']
+odir = os.environ['ODIR']
+pdir = os.environ['PDIR']
+# data_dir = '../output/100doh_detectron'
+# odir = '../output/100doh_detectron/by_obj'
+# pdir = data_dir + '/by_ppl'
 
 def run(seqname):
     vid_list = [osp.basename(e) for e in glob.iglob(osp.join(odir, 'JPEGImages/%s' % seqname))]

@@ -11,9 +11,13 @@ import os.path as osp
 import scipy.io as sio
 import utils.ffmpeg_utils as ffmpeg_utils
 
-data_dir = '../output/100doh_detectron'
-odir = '../output/100doh_detectron/by_obj'
-pdir = data_dir + '/by_ppl'
+data_dir = os.environ['DATA_DIR']
+odir = os.environ['ODIR']
+pdir = os.environ['PDIR']
+
+# data_dir = '../output/100doh_detectron'
+# odir = '../output/100doh_detectron/by_obj'
+# pdir = data_dir + '/by_ppl'
 va_dir = odir + '/VidAnnotations'
 meta_dir = odir + '/Meta'
 

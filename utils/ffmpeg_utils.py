@@ -20,8 +20,8 @@ def write_mp4(video, save_file, fps=10, clear=True):
     if osp.exists(save_file + '.mp4'):
         os.system('rm %s.mp4' % (save_file))
     src_list_dir = osp.join(tmp_dir, '%03d.' + ext )
-    cmd = 'ffmpeg -framerate %d -i %s -c:v libx264 -pix_fmt yuv420p %s.mp4' % (fps, src_list_dir, save_file)
-    # cmd = '/home/yufeiy2/.local/bin/ffmpeg -framerate %d -i %s -c:v libx264 -pix_fmt yuv420p %s.mp4' % (fps, src_list_dir, save_file)
+    # cmd = 'ffmpeg -framerate %d -i %s -c:v libx264 -pix_fmt yuv420p %s.mp4' % (fps, src_list_dir, save_file)
+    cmd = '/home/yufeiy2/.local/bin/ffmpeg -framerate %d -i %s -c:v libx264 -pix_fmt yuv420p %s.mp4' % (fps, src_list_dir, save_file)
     cmd += ' -hide_banner -loglevel error'
     print(cmd)
     os.system(cmd)

@@ -13,11 +13,8 @@ from sys import argv
 from flask import jsonify
 import numpy as np
 
-# odir = '../output/100doh_detectron/by_obj/'
-# fdir = '../output/100doh_detectron/by_seq/'
-
-odir = os.environ['ODIR']
-fdir = os.environ['FDIR']
+odir = '../output/100doh_detectron/by_obj/'
+fdir = '../output/100doh_detectron/by_seq/'
 
 def load_hand_bboxes(seqname):
     hand_meta = pickle.load(
