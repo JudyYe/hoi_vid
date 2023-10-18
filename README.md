@@ -2,7 +2,7 @@
 
 - Input: Hand-object interaction (HOI) videos with hand-object bounding box in the first frame. 
 
-- Output: per-frame hand-object masks, hand poses.
+- Output: per-frame hand-object masks, hand boxes, (3D hand poses). 
 
 
 ## Installation 
@@ -61,7 +61,7 @@ sh vos.sh $seq
 - put to STCN format
 - track by STCN
 - evaluate tracking quality (by mask IoU between first frame and tracking forward and backward) and visualize masks.
-- find coresponding hand and reconstruct hand by frank mocap
+- find coresponding hand (and reconstruct hand by frank mocap, if uncomment [`preprocess/hand_det_w_gt.sh:L13-22`](preprocess/hand_det_w_gt.sh))
 
 Batchify script: list all clips and feed them through vos.sh one by one
 ```
