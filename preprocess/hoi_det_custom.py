@@ -29,7 +29,7 @@ coco_metadata = MetadataCatalog.get("coco_2017_val")
 
 from box2mask import Box2Mask
 
-anno_file = '/grogu/user/yufeiy2/pretrain/detectron2/meta/instances_val2017.json'
+anno_file = osp.join(os.environ['DET_DIR'], 'meta/instances_val2017.json')
 coco_data = coco.COCO(anno_file)
 coco_classes = coco_data.loadCats(coco_data.getCatIds())
 coco_classes = [cat['name'] for cat in coco_classes]
@@ -39,7 +39,7 @@ odir = os.environ['ODIR']
 # odir = '/home/yufeiy2/scratch/result/3rd/by_obj/'
 
 def setup_model():
-    detbase='/grogu/user/yufeiy2/pretrain/detectron2/' # sys.argv[2]
+    detbase=os.environ['DET_DIR'] # sys.argv[2]
     cfg = get_cfg()
 
     point_rend.add_pointrend_config(cfg)

@@ -2,37 +2,37 @@
  
 set -x 
 
-# export ODIR='/home/yufeiy2/scratch/result/3rd_cache/by_obj'
-# export PDIR=/home/yufeiy2/scratch/result/3rd_cache/by_ppl
-# export FDIR=/home/yufeiy2/scratch/result/3rd_cache/by_seq
-# export DATA_DIR='/home/yufeiy2/scratch/result/3rd_cache'
-# export RAWDIR='/home/yufeiy2/scratch/data/3rd'
+export DET_DIR='/private/home/yufeiy2/Packages/detectron2'   # your detectron2 path
+export DATA_DIR='/private/home/yufeiy2/scratch/result/1st_cache'  # output path
+export RAWDIR='/private/home/yufeiy2/scratch/result/RAW_WILD/'    # input sequence path
 
-export ODIR='/home/yufeiy2/scratch/result/1st_cache/by_obj'
-export PDIR=/home/yufeiy2/scratch/result/1st_cache/by_ppl
-export FDIR=/home/yufeiy2/scratch/result/1st_cache/by_seq
-export DATA_DIR='/home/yufeiy2/scratch/result/1st_cache'
-export RAWDIR='/home/yufeiy2/scratch/data/1st'
+# export ODIR='/private/home/yufeiy2/scratch/result/3rd_cache/by_obj'
+# export PDIR=/private/home/yufeiy2/scratch/result/3rd_cache/by_ppl
+# export FDIR=/private/home/yufeiy2/scratch/result/3rd_cache/by_seq
+# export DATA_DIR='/private/home/yufeiy2/scratch/result/3rd_cache'
+# export RAWDIR='/private/home/yufeiy2/scratch/data/3rd'
+
+# intermediate parameters
+export ODIR=${DATA_DIR}/by_obj
+export PDIR=${DATA_DIR}/by_ppl
+export FDIR=${DATA_DIR}/by_seq
 
 
 seqname=$1
 
-# # extract first frame
+# extract first frame
 python -m preprocess.hoi_det_custom $seqname
-# # put to STCN format
+# put to STCN format
 python -m preprocess.cvt_to_stcn $seqname*
 
-# # # track by STCN
-# cd ../STCN
-# python run_doh.py --folder ../../output/100doh_detectron/by_obj --seq $seqname*
-# python run_doh.py --folder ../../output/100doh_detectron/by_ppl --seq $seqname*
+# track by STCN
 
 cd ../STCN
 python run_doh.py --folder ${ODIR} --seq $seqname*
 python run_doh.py --folder ${PDIR} --seq $seqname*
 
 
-# # # evaluate and visualize
+# evaluate and visualize
 cd - 
 python -m preprocess.eval_vis $seqname*
 
