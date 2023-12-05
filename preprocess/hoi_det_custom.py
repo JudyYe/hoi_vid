@@ -50,14 +50,14 @@ def setup_model():
     predictor = Box2Mask(cfg)
     return predictor
 
-
+ext = '.jpg'
 def test(seqname, predictor):
     # detect the first frame, move object seq to odir 
     # rename seq to %05d from 0
     imgdir= '%s/JPEGImages/%s'%(odir,seqname)
     maskdir='%s/Annotations/%s'%(odir,seqname)
 
-    path = osp.join(raw_dir, seqname, f'images/{0:04d}.png')
+    path = osp.join(raw_dir, seqname, f'images/{0:04d}{ext}')
     try:
         gt_boxes, is_object = find_gt_boxes(osp.join(raw_dir, seqname))
     except FileNotFoundError:
@@ -85,6 +85,9 @@ def test(seqname, predictor):
     for o in range(len(obj_mask)):
         os.makedirs(maskdir + '_%d' % o, exist_ok=True)
         cv2.imwrite(maskdir + '_%d/%05d.png' % (o, 0), obj_mask[o])
+        print(hand_mask.shape, obj_mask[o].shape, obj_mask.dtype, 
+              gt_boxes[obj_inds[o]].shape, gt_boxes[hand_inds].shape)
+        # (1, 480, 640) (480, 640) uint8 (4,) (1, 4)
         # cv2.imwrite(maskdir + '_%d/%05d.png' % (o, 0), hand_mask[o])
         sio.savemat(maskdir + '_%d/%05d.mat' % (o, 0), 
             {'hand_mask': hand_mask, 'hand_box': gt_boxes[hand_inds],
